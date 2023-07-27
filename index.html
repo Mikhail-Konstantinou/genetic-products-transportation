@@ -226,14 +226,38 @@
             </div>
 
             <div x-show="showSimulation" x-transition.duration.1000ms>
-                <div id="simulation-actions" class="box">
-                    <h2 class="title is-4">
-                        <i class="fa-solid fa-bolt"></i>
-                        Actions
-                    </h2>
-                    <button class="button is-info" id="btnNewGeneration" x-on:click="onNewGeneration()">New generation</button>
-                    <button class="button is-primary" x-on:click="onStartOver()">Start over</button>
+                <div class="columns">
+                    <div class="column is-6">
+                        <div id="simulation-actions" class="box">
+                            <h2 class="title is-4">
+                                <i class="fa-solid fa-bolt"></i>
+                                Actions
+                            </h2>
+                            <button class="button is-info" id="btnNewGeneration" x-on:click="onNewGeneration()">New generation</button>
+                            <button class="button is-primary" x-on:click="onStartOver()">Start over</button>
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="box">
+                            <h4 class="title is-5">
+                                <i class="fa-solid fa-gear"></i>
+                                Configuration used
+                            </h4>
+                            <div class="columns">
+                                <div class="column is-6">
+                                    <p>Truck capacity: <span x-text="tuner.capacity"></span></p>
+                                    <p>No. generations: <span x-text="tuner.numberOfGenerations"></span></p>
+                                </div>
+                                <div class="column is-6">
+                                    <p>Mutation rate: <span x-text="tuner.mutationRate"></span></p>
+                                    <p>Population size: <span x-text="tuner.populationSize"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            
+                
                 <div class="columns">
                     <div class="column is-6">
                         <div class="box">
@@ -291,7 +315,6 @@
                                 <i class="fa-solid fa-dna"></i>
                                 <span x-text="'Generation ' + pageSolution.generation + ' solution'"></span>
                             </h4>
-                            <p>Generation: <span x-text="pageSolution.generation"></span></p>
                             <p>Score: <span x-text="parseFloat(pageSolution.score).toFixed(2)"></span></p>
                             <p>Space used: <span x-text="parseFloat(pageSolution.spaceUsed).toFixed(2)"></span></p>
                             <p></p>
@@ -329,22 +352,6 @@
                     <canvas id="chartSpaces"></canvas>
                 </div>
               </div>
-                
-
-                <div class="columns">
-                    <div class="column is-6">
-                        <div class="box">
-                            <h4 class="title is-5">
-                                <i class="fa-solid fa-gear"></i>
-                                Configuration used
-                            </h4>
-                            <p>Truck capacity: #3</p>
-                            <p>No. generations: #3</p>
-                            <p>Mutation rate: #3</p>
-                            <p>Population size: #3</p>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- <table class="table is-bordered is-striped is-narrow is-hoverable ">
                 <thead>
@@ -367,6 +374,14 @@
             
         </div>
     </div>
+
+    <footer class="footer mt-6">
+        <div class="content has-text-centered">
+            <p>
+                <strong>Genetic transportation of products</strong> by <a href="https://mkonstantinou.eu">Michael Konstantinou</a>.
+            </p>
+        </div>
+    </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/js/page_manager.js"></script>

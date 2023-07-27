@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Genetic transportation of products</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+  </head>
+  <body x-data="pageManager">
+
+    <section class="hero is-info is-medium">
+        <!-- <div class="hero-head">
+          <nav class="navbar">
+            <div class="container">
+              <div class="navbar-brand">
+                <a class="navbar-item">
+                  <img src="https://bulma.io/images/bulma-type-white.png" alt="Logo">
+                </a>
+                <span class="navbar-burger" data-target="navbarMenuHeroB">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </div>
+              <div id="navbarMenuHeroB" class="navbar-menu">
+                <div class="navbar-end">
+                  <a class="navbar-item is-active">
+                    Home
+                  </a>
+                  <a class="navbar-item">
+                    Examples
+                  </a>
+                  <a class="navbar-item">
+                    Documentation
+                  </a>
+                  <span class="navbar-item">
+                    <a class="button is-info is-inverted">
+                      <span class="icon">
+                        <i class="fab fa-github"></i>
+                      </span>
+                      <span>Download</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div> -->
+      
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <p class="title">
+              Genetic transportation of products
+            </p>
+            <p class="subtitle">
+              An evolutionary algorithms approach of Artificial Intelligence
+            </p>
+          </div>
+        </div>
+      
+        <div class="hero-foot">
+          <nav class="tabs is-boxed is-fullwidth">
+            <div class="container">
+              <ul>
+                <li :class="selectedTab === 0 ? 'is-active' : ''">
+                  <a x-on:click="changeTab(0)">Project overview</a>
+                </li>
+                <li :class="selectedTab === 1 ? 'is-active' : ''">
+                  <a x-on:click="changeTab(1)">Demostration</a>
+                </li>
+                <li :class="selectedTab === 2 ? 'is-active' : ''">
+                  <a x-on:click="changeTab(2)">Evolutionary algorithms explained</a>
+                </li>
+                <li :class="selectedTab === 3 ? 'is-active' : ''">
+                    <a x-on:click="changeTab(3)">Project implementation</a>
+                  </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+    </section>
+
+    <div class="container mt-5">
+        <div id="section-project-overview" class="content" x-show="selectedTab === 0" x-transition.duration.500ms>
+            <h2>Project description</h2>
+            <p>Let's assume that a company must immediately load up a truck with as much items as possible. Under what criteria should the company load the truck
+                and what combination of products will give to the company the best outcome? Of 100 products... how can we find out which products shall we put into the track
+                to <b>maximize the profit</b>?
+            </p>
+
+            <h3>Possible solutions</h3>
+            <p>The number of possible solutions for this problem are... over a million! For only 10 products, there are about 39.916.800 possible combinations!
+                It is quite exhaustive to iterate all possible combinations and choose the best combination. What if we want to add more products in the future? 
+            </p>
+            <p>Well, luckily, genetic algorithms are a perfect fit for this kind of problems!
+            </p>
+
+            <h2>How it works</h2>
+            <ol>
+                <li>You choose the tab "Demostration" above</li>
+                <li>You define the problem. Specify which products exist in your problem and the capacity of the track (e.g. 2 TVs of 0.400 cubic meters and a track of 3 cubic meters)</li>
+                <li>You click "run" and the "Genetic transportation of goods" will give you an optimal solution</li>
+            </ol>
+
+            <h2>How genetic algorithms work?</h2>
+            <p>Genetic algorithms are a field of Evolutionary algorithms...which are in turn a field of Artificial Intelligence</p>
+            <p>Conceptually, evolutionary algorithms are inspired by nature. If we imagine that a problem can be represented as "genes" and "chromosomes", we could then breed and 
+                mutate the chromosomes until we find the best solution. This is often called as "survival of the fittest". 
+            </p>
+            <p>For instance, in this example we declare a chromosome as a combination of goods that are loaded into the track. 0100 is a chromosome that indicates that </p>
+        </div>
+
+        <div id="section-demostration" x-show="selectedTab == 1" x-transition.duration.500ms x-data="appGeneticTransportation">
+            <div x-show="showForm" id="demostration-form" class="section-form" x-transition.duration.1000ms>
+                <div class="columns">
+                    <div class="column is-7 is-offset-2">
+                        <div class="box">
+                          <div class="notification is-danger is-light mt-3" x-show="hasErrors">
+                            <strong>Error!</strong>
+                            Some of the inputs specified are incorrect!
+                            Please make sure that the track has a capacity between 1 and 10 cubic meters and that the products are values between 1 and 5
+                          </div>
+
+                          
+                            <h2 class="title is-6">
+                                <span class="icon">
+                                    <i class="fa-solid fa-truck"></i>
+                                </span>
+                                Choose track specifications
+                            </h2>
+                            <div class="field is-horizontal">
+                                <div class="field-label is-normal">
+                                <label class="label">Capacity (cubic meters)</label>
+                                </div>
+                                <div class="field-body">
+                                <div class="field">
+                                    <p class="control">
+                                    <input class="input" type="number" min="1" x-model="tuner.spaceLimit">
+                                    </p>
+                                </div>
+                                </div>
+                            </div>
+                            <h2 class="title is-6 mt-6">
+                                <span class="icon">
+                                    <i class="fa-solid fa-warehouse"></i>
+                                </span>
+                                Specify products in storage
+                            </h2>
+                            <template x-for="product in products">
+                              <div class="field is-horizontal">
+                                <div class="field-label is-normal">
+                                <label :class="'label ' + (product.hasError ? 'has-text-danger' : '')" x-text="product.name"></label>
+                                </div>
+                                <div class="field-body">
+                                <div class="field">
+                                    <p class="control">
+                                    <input 
+                                    :class="'input ' + (product.hasError ? 'is-danger' : '')" 
+                                    type="number" 
+                                    min="0" 
+                                    max="5" 
+                                    :name="product.quantity" 
+                                    x-model="product.quantity">
+                                    </p>
+                                </div>
+                                </div>
+                              </div>
+                            </template>
+                            
+                            <!-- Genetic algorithms parameters -->
+                            <h2 class="title is-6 mt-6">
+                              <span class="icon">
+                                <i class="fa-solid fa-dna"></i>
+                              </span>
+                              Genetic algorithms tuning
+                          </h2>
+                          <div class="field is-horizontal">
+                              <div class="field-label is-normal">
+                              <label class="label"># Generations</label>
+                              </div>
+                              <div class="field-body">
+                              <div class="field">
+                                  <p class="control">
+                                  <input class="input" type="number" min="10" x-model="tuner.numberOfGenerations">
+                                  </p>
+                              </div>
+                              </div>
+                          </div>
+
+                          <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                            <label class="label">% Mutation probability</label>
+                            </div>
+                            <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                <input class="input" type="number" step="0.01" min="0" max="100" x-model="tuner.mutationRate">
+                                </p>
+                            </div>
+                            </div>
+                          </div>
+
+                          <button class="button is-info is-fullwidth" x-on:click="simulate()">Start</button>
+                          <span x-show="hasErrors == true" class="has-text-danger">Some fields are incorrect</span>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="showSimulation" x-transition.duration.1000ms>
+                <div id="simulation-actions" class="box">
+                    <h2 class="title is-4">
+                        <i class="fa-solid fa-bolt"></i>
+                        Actions
+                    </h2>
+                    <button class="button is-info" id="btnNewGeneration" x-on:click="onNewGeneration()">New generation</button>
+                    <button class="button is-primary" x-on:click="onStartOver()">Start over</button>
+                </div>
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="box">
+                            <h4 class="title is-5">
+                                <i class="fa-solid fa-bullseye"></i>
+                                Best solution
+                            </h4>
+                            <p>Generation: <span x-text="bestSolution.generation"></span></p>
+                            <p>Score: <span x-text="parseFloat(bestSolution.score).toFixed(2)"></span></p>
+                            <p>Space used: <span x-text="parseFloat(bestSolution.spaceUsed).toFixed(2)"></span></p>
+                            <p></p>
+
+                            <h4 class="title is-5 mt-3">Products to put in truck</h4>
+                            <div class="is-centered">
+                                <table class="table is-bordered is-striped is-narrow is-hoverable ">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>Price ($)</th>
+                                        <th>Space required (m³)</th>
+                                      </thead>
+                                      <tbody>
+                                        <template x-for="product of bestSolutionProducts">
+                                            <tr>
+                                                <td x-text="product['name']"></td>
+                                                <td x-text="product['price']"></td>
+                                                <td x-text="product['space']"></td>
+                                            </tr>
+                                        </template>
+                                    </tbody>    
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="box">
+                            <h4 class="title is-5">
+                                <i class="fa-solid fa-gear"></i>
+                                Configuration used
+                            </h4>
+                            <p>Truck capacity: #3</p>
+                            <p>No. generations: #3</p>
+                            <p>Mutation rate: #3</p>
+                            <p>Population size: #3</p>
+                        </div>
+                    </div>
+                </div>
+              <div class="columns">
+                <div class="column">
+                    <h3 class="title is-6">Best scores in each generation</h3>
+                    <canvas id="chartScores"></canvas>
+                </div>
+                <div class="column">
+                    <h3 class="title is-6">Space used in best solutions</h3>
+                    <canvas id="chartSpaces"></canvas>
+                </div>
+              </div>
+            <h2 class="title is-6">Solutions per generation</h2>
+            <table class="table is-bordered is-striped is-narrow is-hoverable ">
+              <thead>
+                <th>Generation</th>
+                <th>Score ($)</th>
+                <th>Space used (m³)</th>
+              </thead>
+              <tbody>
+                <template x-for="solution of solutions">
+                  <tr>
+                    <td x-text="solution.generation"></td>
+                    <td x-text="parseFloat(solution.score).toFixed(2);"></td>
+                    <td x-text="parseFloat(solution.spaceUsed).toFixed(2);"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+            
+            </div>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/page_manager.js"></script>
+    <script src="app/main.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('pageManager', pageManager);
+
+            Alpine.data('appGeneticTransportation', appGeneticTransportation);
+        });
+    </script>
+  </body>
+</html>

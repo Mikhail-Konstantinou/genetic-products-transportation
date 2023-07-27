@@ -373,6 +373,37 @@
             </div>
             
         </div>
+
+        <div id="section-solution-explained" x-show="selectedTab == 2" x-transition.duration.500ms>
+            <div class="content">
+                <h2>Solution explained</h2>
+                <h3>Gene</h3>
+                <p>A gene in this problem is represented as a binary digit.</p>
+                <ul>
+                    <li>0 means that the product is not selected to be loaded in the truck</li>
+                    <li>1 means that the product is selected</li>
+                </ul>
+
+                <h3>Chromosome</h3>
+                <p>A chromosome is sequence of genes. Essentially a chromosome represents a solution. 
+                    For instance, the chromosome 0100 means that the first product is not selected, the second product is selected
+                    while the last two products are not selected. 
+                </p>
+                <p>
+                    <img src="assets/img/representation.png" alt="Representation">
+                </p>
+
+                <h3>Representing the problem as chromsomes and genes</h3>
+                <p>If you already tried the form in the <strong>demonstration</strong> tab, you might have noticed
+                that in the form you are able to choose more than one instances of the same product (e.g. 3 TVs). Since a chromosome is a binary value representing whether
+                the product is included in the truck... does this mean that the all product instances shall be included?</p>
+                <p><strong>No</strong>. Once the products are specified, the solver creates a list (sequence) of the products. If a product has more than 1 instances,
+                then the product is represented in the list <strong>twice!</strong></p>
+                <p>
+                    <img src="assets/img/representation_multiple.png" alt="Representation">
+                </p>
+            </div>
+        </div>
     </div>
 
     <footer class="footer mt-6">

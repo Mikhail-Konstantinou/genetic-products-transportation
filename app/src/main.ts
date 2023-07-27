@@ -31,12 +31,19 @@ const appGeneticTransportation = () => ({
     bestSolution: {},
     bestSolutionProducts: {},
 
+    // Holds the selected page's solution and its products
+    pageSolution: {},
+    pageSolutionProducts: {},
+
     // Holds the charts being shown in the page
     chartScores: 0,
     chartSpaces: 0,
 
     // Holds the application that is responsible for the execution of the genetic algorithms
     app: {},
+
+    // @ts-ignore
+    paginator: new Paginator(1),
 
     updateChart() {
         const labels: number[] = [];
@@ -154,8 +161,13 @@ const appGeneticTransportation = () => ({
         this.solutionScores = this.app.getSolutionScores();
         this.solutionSpaces = this.app.getSolutionSpaces();
         this.bestSolution = this.app.bestSolution;
-        this.bestSolutionProducts = this.app.getSolutionProducts();
+        this.bestSolutionProducts = this.app.getSolutionProducts(this.bestSolution);
         this.updateChart();
+
+        // Update paginator
+        this.pageSolution = this.app.solutions[0];
+        this.pageSolutionProducts = this.app.getSolutionProducts(this.pageSolution);
+        this.paginator = new Paginator(this.tuner.numberOfGenerations);
     },
 
     /**
@@ -171,6 +183,7 @@ const appGeneticTransportation = () => ({
      */
     onNewGeneration() {
         document.getElementById('btnNewGeneration').classList.add('is-loading');
+        document.getElementById('btnNewGeneration').setAttribute('disabled', 'disabled');
 
         // Destroy existing graphs
         this.chartScores.destroy();
@@ -185,10 +198,18 @@ const appGeneticTransportation = () => ({
         this.solutionScores = this.app.getSolutionScores();
         this.solutionSpaces = this.app.getSolutionSpaces();
         this.bestSolution = this.app.bestSolution;
-        this.bestSolutionProducts = this.app.getSolutionProducts();
+        this.bestSolutionProducts = this.app.getSolutionProducts(this.bestSolution);
         this.updateChart();
+        this.paginator.lastPage++;
         setTimeout(() => {
             document.getElementById('btnNewGeneration').classList.remove('is-loading');
-        }, 500);
+            document.getElementById('btnNewGeneration').removeAttribute('disabled');
+        }, 1000);
+    },
+
+    onChangePage(page: number) {
+        this.pageSolution = this.app.solutions[page - 1];
+        this.pageSolutionProducts = this.app.getSolutionProducts(this.pageSolution);
+        this.paginator = new Paginator(this.tuner.numberOfGenerations, page);
     }
 });

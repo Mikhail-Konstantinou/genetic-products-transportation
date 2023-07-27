@@ -204,6 +204,19 @@
                             </div>
                           </div>
 
+                          <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                            <label class="label"># Population size</label>
+                            </div>
+                            <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                <input class="input" type="number" step="1" min="10" max="10000" x-model="tuner.populationSize">
+                                </p>
+                            </div>
+                            </div>
+                          </div>
+
                           <button class="button is-info is-fullwidth" x-on:click="simulate()">Start</button>
                           <span x-show="hasErrors == true" class="has-text-danger">Some fields are incorrect</span>
                         </div>
@@ -224,11 +237,12 @@
                 <div class="columns">
                     <div class="column is-6">
                         <div class="box">
-                            <h4 class="title is-5">
+                            <h3 class="title is-4">Best solution</h3>
+                            <span class="p-1"></span>
+                            <h4 class="title is-5 mt-5">
                                 <i class="fa-solid fa-bullseye"></i>
-                                Best solution
+                                Generation <span x-text="bestSolution.generation"></span>
                             </h4>
-                            <p>Generation: <span x-text="bestSolution.generation"></span></p>
                             <p>Score: <span x-text="parseFloat(bestSolution.score).toFixed(2)"></span></p>
                             <p>Space used: <span x-text="parseFloat(bestSolution.spaceUsed).toFixed(2)"></span></p>
                             <p></p>
@@ -257,16 +271,53 @@
                     </div>
                     <div class="column is-6">
                         <div class="box">
+                            <h2 class="title is-4">Solutions per generation</h2>
+                            <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                                <a class="pagination-previous" :disabled="paginator.currentPage <= 1" @click="onChangePage(paginator.getPreviousPage())">Previous</a>
+                                <a class="pagination-next" :disabled="paginator.currentPage >= paginator.lastPage" @click="onChangePage(paginator.getNextPage())">Next</a>
+                                <ul class="pagination-list">
+                                    <li x-show="paginator.hasFirstPage()"><a class="pagination-link" aria-label="Goto page 1" @click="onChangePage(1)">1</a></li>
+                                    <li x-show="paginator.hasFirstPage()"><span class="pagination-ellipsis">&hellip;</span></li>
+                                    <template x-for="button in paginator.getButtons()" :key="button.page">
+                                        <li>
+                                            <a :class="button.cssClass" :aria-label="button.label" @click="onChangePage(button.page)" x-text="button.page"></a>
+                                        </li>
+                                    </template>
+                                    <li x-show="paginator.hasLastPage()"><span class="pagination-ellipsis">&hellip;</span></li>
+                                    <li x-show="paginator.hasLastPage()"><a class="pagination-link" :aria-label="'Goto page ' + paginator.lastPage" @click="onChangePage(paginator.lastPage)" x-text="paginator.lastPage"></a></li>
+                                </ul>
+                            </nav>
                             <h4 class="title is-5">
-                                <i class="fa-solid fa-gear"></i>
-                                Configuration used
+                                <i class="fa-solid fa-dna"></i>
+                                <span x-text="'Generation ' + pageSolution.generation + ' solution'"></span>
                             </h4>
-                            <p>Truck capacity: #3</p>
-                            <p>No. generations: #3</p>
-                            <p>Mutation rate: #3</p>
-                            <p>Population size: #3</p>
+                            <p>Generation: <span x-text="pageSolution.generation"></span></p>
+                            <p>Score: <span x-text="parseFloat(pageSolution.score).toFixed(2)"></span></p>
+                            <p>Space used: <span x-text="parseFloat(pageSolution.spaceUsed).toFixed(2)"></span></p>
+                            <p></p>
+
+                            <h4 class="title is-5 mt-3">Products to put in truck</h4>
+                            <div class="is-centered">
+                                <table class="table is-bordered is-striped is-narrow is-hoverable ">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>Price ($)</th>
+                                        <th>Space required (m³)</th>
+                                      </thead>
+                                      <tbody>
+                                        <template x-for="product of pageSolutionProducts">
+                                            <tr>
+                                                <td x-text="product['name']"></td>
+                                                <td x-text="product['price']"></td>
+                                                <td x-text="product['space']"></td>
+                                            </tr>
+                                        </template>
+                                    </tbody>    
+                                </table>
+                            </div>
                         </div>
                     </div>
+                    
                 </div>
               <div class="columns">
                 <div class="column">
@@ -278,24 +329,40 @@
                     <canvas id="chartSpaces"></canvas>
                 </div>
               </div>
-            <h2 class="title is-6">Solutions per generation</h2>
-            <table class="table is-bordered is-striped is-narrow is-hoverable ">
-              <thead>
-                <th>Generation</th>
-                <th>Score ($)</th>
-                <th>Space used (m³)</th>
-              </thead>
-              <tbody>
-                <template x-for="solution of solutions">
-                  <tr>
-                    <td x-text="solution.generation"></td>
-                    <td x-text="parseFloat(solution.score).toFixed(2);"></td>
-                    <td x-text="parseFloat(solution.spaceUsed).toFixed(2);"></td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-            
+                
+
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="box">
+                            <h4 class="title is-5">
+                                <i class="fa-solid fa-gear"></i>
+                                Configuration used
+                            </h4>
+                            <p>Truck capacity: #3</p>
+                            <p>No. generations: #3</p>
+                            <p>Mutation rate: #3</p>
+                            <p>Population size: #3</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <table class="table is-bordered is-striped is-narrow is-hoverable ">
+                <thead>
+                    <th>Generation</th>
+                    <th>Score ($)</th>
+                    <th>Space used (m³)</th>
+                </thead>
+                <tbody>
+                    <template x-for="solution of solutions">
+                    <tr>
+                        <td x-text="solution.generation"></td>
+                        <td x-text="parseFloat(solution.score).toFixed(2);"></td>
+                        <td x-text="parseFloat(solution.spaceUsed).toFixed(2);"></td>
+                    </tr>
+                    </template>
+                </tbody>
+                </table> -->
+                
             </div>
             
         </div>

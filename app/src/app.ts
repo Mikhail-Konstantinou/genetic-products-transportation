@@ -183,10 +183,10 @@ class App implements GeneticAlgorithm {
         return solutionSpaces;
     }
 
-    getSolutionProducts() {
+    getSolutionProducts(solution: Individual) {
         const solutionProducts: Product[] = [];
-        for (let index in this.bestSolution.chromosome) {
-            if (this.bestSolution.chromosome[index] === 1) {
+        for (let index in solution.chromosome) {
+            if (solution.chromosome[index] === 1) {
                 solutionProducts.push(this.products[index]);
             }
         }

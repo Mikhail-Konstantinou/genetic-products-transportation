@@ -120,10 +120,10 @@ var App = (function () {
         }
         return solutionSpaces;
     };
-    App.prototype.getSolutionProducts = function () {
+    App.prototype.getSolutionProducts = function (solution) {
         var solutionProducts = [];
-        for (var index in this.bestSolution.chromosome) {
-            if (this.bestSolution.chromosome[index] === 1) {
+        for (var index in solution.chromosome) {
+            if (solution.chromosome[index] === 1) {
                 solutionProducts.push(this.products[index]);
             }
         }
@@ -157,9 +157,12 @@ var appGeneticTransportation = function () { return ({
     solutionSpaces: {},
     bestSolution: {},
     bestSolutionProducts: {},
+    pageSolution: {},
+    pageSolutionProducts: {},
     chartScores: 0,
     chartSpaces: 0,
     app: {},
+    paginator: new Paginator(1),
     updateChart: function () {
         var labels = [];
         for (var i = 0; i < this.tuner.numberOfGenerations; i++) {
@@ -257,8 +260,11 @@ var appGeneticTransportation = function () { return ({
         this.solutionScores = this.app.getSolutionScores();
         this.solutionSpaces = this.app.getSolutionSpaces();
         this.bestSolution = this.app.bestSolution;
-        this.bestSolutionProducts = this.app.getSolutionProducts();
+        this.bestSolutionProducts = this.app.getSolutionProducts(this.bestSolution);
         this.updateChart();
+        this.pageSolution = this.app.solutions[0];
+        this.pageSolutionProducts = this.app.getSolutionProducts(this.pageSolution);
+        this.paginator = new Paginator(this.tuner.numberOfGenerations);
     },
     onStartOver: function () {
         this.showForm = true;
@@ -266,6 +272,7 @@ var appGeneticTransportation = function () { return ({
     },
     onNewGeneration: function () {
         document.getElementById('btnNewGeneration').classList.add('is-loading');
+        document.getElementById('btnNewGeneration').setAttribute('disabled', 'disabled');
         this.chartScores.destroy();
         this.chartSpaces.destroy();
         this.tuner.numberOfGenerations++;
@@ -274,11 +281,18 @@ var appGeneticTransportation = function () { return ({
         this.solutionScores = this.app.getSolutionScores();
         this.solutionSpaces = this.app.getSolutionSpaces();
         this.bestSolution = this.app.bestSolution;
-        this.bestSolutionProducts = this.app.getSolutionProducts();
+        this.bestSolutionProducts = this.app.getSolutionProducts(this.bestSolution);
         this.updateChart();
+        this.paginator.lastPage++;
         setTimeout(function () {
             document.getElementById('btnNewGeneration').classList.remove('is-loading');
-        }, 500);
+            document.getElementById('btnNewGeneration').removeAttribute('disabled');
+        }, 1000);
+    },
+    onChangePage: function (page) {
+        this.pageSolution = this.app.solutions[page - 1];
+        this.pageSolutionProducts = this.app.getSolutionProducts(this.pageSolution);
+        this.paginator = new Paginator(this.tuner.numberOfGenerations, page);
     }
 }); };
 var Individual = (function () {
@@ -320,6 +334,71 @@ var Individual = (function () {
         this.spaceUsed = space;
     };
     return Individual;
+}());
+var Paginator = (function () {
+    function Paginator(lastPage, currentPage) {
+        if (currentPage === void 0) { currentPage = 1; }
+        this.currentPage = currentPage;
+        this.lastPage = lastPage;
+        this.paginatorLength = 3;
+    }
+    Paginator.prototype.hasFirstPage = function () {
+        if (this.currentPage > 2) {
+            return true;
+        }
+        return false;
+    };
+    Paginator.prototype.hasLastPage = function () {
+        console.log(this.currentPage, this.lastPage);
+        if (this.currentPage < (this.lastPage - 1)) {
+            return true;
+        }
+        return false;
+    };
+    Paginator.prototype.getButtons = function () {
+        var buttons = [];
+        var counter;
+        if (this.currentPage === 1) {
+            counter = 1;
+        }
+        else if (this.currentPage === this.lastPage) {
+            counter = this.lastPage - this.paginatorLength + 1;
+        }
+        else {
+            counter = this.currentPage - Math.floor(this.paginatorLength / 2);
+        }
+        if (counter < 1) {
+            counter = 1;
+        }
+        for (var i = 0; i < this.paginatorLength; i++) {
+            if (this.currentPage === (counter + i)) {
+                buttons.push(new PaginatorButton(counter + i, true));
+            }
+            else {
+                buttons.push(new PaginatorButton(counter + i));
+            }
+        }
+        return buttons;
+    };
+    Paginator.prototype.getPreviousPage = function () {
+        return this.currentPage === 1 ? 1 : this.currentPage - 1;
+    };
+    Paginator.prototype.getNextPage = function () {
+        return this.currentPage === this.lastPage ? this.lastPage : this.currentPage + 1;
+    };
+    return Paginator;
+}());
+var PaginatorButton = (function () {
+    function PaginatorButton(page, isCurrentPage) {
+        if (isCurrentPage === void 0) { isCurrentPage = false; }
+        this.label = 'Goto page ' + page;
+        this.page = page;
+        this.cssClass = 'pagination-link';
+        if (isCurrentPage === true) {
+            this.cssClass += ' is-current';
+        }
+    }
+    return PaginatorButton;
 }());
 var Product = (function () {
     function Product(name, space, price, quantity) {

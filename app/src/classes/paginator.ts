@@ -1,3 +1,7 @@
+/**
+ * The class is responsible to correctly show the pagination alongside its proper buttons.
+ * In this problem the paginator is used to traverse all the generation solutions
+ */
 class Paginator {
     currentPage: number;
     lastPage: number;
@@ -9,7 +13,14 @@ class Paginator {
         this.paginatorLength = 3;
     }
 
-    hasFirstPage() {
+    /**
+     * Returns whether the paginator should show the first page button.
+     * It is convinient when the user is in the last pages but would like to skip to the first page, but when the user
+     * is in the first pages the button should not be shown twice
+     * 
+     * @returns boolean
+     */
+    hasFirstPage(): boolean {
         if (this.currentPage > 2) {
             return true;
         }
@@ -17,8 +28,14 @@ class Paginator {
         return false;
     }
 
-    hasLastPage() {
-        console.log(this.currentPage, this.lastPage);
+    /**
+     * Returns whether the paginator should show the last page button.
+     * It is convinient when the user is in the early pages but would like to skip to the end, but when the user
+     * is in the last pages the button should not be shown twice
+     * 
+     * @returns boolean
+     */
+    hasLastPage(): boolean {
         if (this.currentPage < (this.lastPage - 1)) {
             return true;
         }
@@ -26,7 +43,12 @@ class Paginator {
         return false;
     }
 
-    getButtons() {
+    /**
+     * Creates and returns the buttons used in pagination
+     * 
+     * @returns PaginatorButton[]
+     */
+    getButtons(): PaginatorButton[] {
         const buttons: PaginatorButton[] = [];
         let counter: number;
 

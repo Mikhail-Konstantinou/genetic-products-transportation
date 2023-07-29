@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Genetic transportation of products</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="assets/vendor/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
   </head>
   <body x-data="pageManager">
@@ -426,9 +425,11 @@
         </div>
     </footer>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Scripts -->
+    <script defer src="assets/vendor/js/alpinejs.min.js"></script>
+    <script src="assets/vendor/js/chart.js"></script>
     <script src="assets/js/page_manager.js"></script>
-    <script src="app/main.js"></script>
+    <script src="app/dist/main.js"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('pageManager', pageManager);

@@ -85,6 +85,7 @@ var App = (function () {
         this.initializePopulation();
         this.evaluation();
         this.bestSolution = this.population[0];
+        this.solutions.push(this.population[0]);
         for (var generation = 0; generation < this.tuner.numberOfGenerations; generation++) {
             this.runGeneration();
         }
@@ -165,8 +166,8 @@ var appGeneticTransportation = function () { return ({
     paginator: new Paginator(1),
     updateChart: function () {
         var labels = [];
-        for (var i = 0; i < this.tuner.numberOfGenerations; i++) {
-            labels.push(i + 1);
+        for (var i = 0; i <= this.tuner.numberOfGenerations; i++) {
+            labels.push(i);
         }
         var ctxScores = document.getElementById('chartScores');
         var ctxSpaces = document.getElementById('chartSpaces');
@@ -290,7 +291,7 @@ var appGeneticTransportation = function () { return ({
         }, 1000);
     },
     onChangePage: function (page) {
-        this.pageSolution = this.app.solutions[page - 1];
+        this.pageSolution = this.app.solutions[page];
         this.pageSolutionProducts = this.app.getSolutionProducts(this.pageSolution);
         this.paginator = new Paginator(this.tuner.numberOfGenerations, page);
     }
@@ -337,19 +338,18 @@ var Individual = (function () {
 }());
 var Paginator = (function () {
     function Paginator(lastPage, currentPage) {
-        if (currentPage === void 0) { currentPage = 1; }
+        if (currentPage === void 0) { currentPage = 0; }
         this.currentPage = currentPage;
         this.lastPage = lastPage;
         this.paginatorLength = 3;
     }
     Paginator.prototype.hasFirstPage = function () {
-        if (this.currentPage > 2) {
+        if (this.currentPage > 1) {
             return true;
         }
         return false;
     };
     Paginator.prototype.hasLastPage = function () {
-        console.log(this.currentPage, this.lastPage);
         if (this.currentPage < (this.lastPage - 1)) {
             return true;
         }
@@ -358,8 +358,8 @@ var Paginator = (function () {
     Paginator.prototype.getButtons = function () {
         var buttons = [];
         var counter;
-        if (this.currentPage === 1) {
-            counter = 1;
+        if (this.currentPage === 0) {
+            counter = 0;
         }
         else if (this.currentPage === this.lastPage) {
             counter = this.lastPage - this.paginatorLength + 1;
@@ -367,8 +367,8 @@ var Paginator = (function () {
         else {
             counter = this.currentPage - Math.floor(this.paginatorLength / 2);
         }
-        if (counter < 1) {
-            counter = 1;
+        if (counter < 0) {
+            counter = 0;
         }
         for (var i = 0; i < this.paginatorLength; i++) {
             if (this.currentPage === (counter + i)) {
@@ -381,7 +381,7 @@ var Paginator = (function () {
         return buttons;
     };
     Paginator.prototype.getPreviousPage = function () {
-        return this.currentPage === 1 ? 1 : this.currentPage - 1;
+        return this.currentPage === 0 ? 0 : this.currentPage - 1;
     };
     Paginator.prototype.getNextPage = function () {
         return this.currentPage === this.lastPage ? this.lastPage : this.currentPage + 1;

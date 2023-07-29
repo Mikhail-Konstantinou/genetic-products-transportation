@@ -47,8 +47,8 @@ const appGeneticTransportation = () => ({
 
     updateChart() {
         const labels: number[] = [];
-        for (let i =0; i<this.tuner.numberOfGenerations; i++) {
-            labels.push(i+1);
+        for (let i =0; i<=this.tuner.numberOfGenerations; i++) {
+            labels.push(i);
         }
 
         const ctxScores = document.getElementById('chartScores');
@@ -208,7 +208,7 @@ const appGeneticTransportation = () => ({
     },
 
     onChangePage(page: number) {
-        this.pageSolution = this.app.solutions[page - 1];
+        this.pageSolution = this.app.solutions[page];
         this.pageSolutionProducts = this.app.getSolutionProducts(this.pageSolution);
         this.paginator = new Paginator(this.tuner.numberOfGenerations, page);
     }

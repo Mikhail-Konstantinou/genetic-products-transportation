@@ -244,11 +244,11 @@
                             </h4>
                             <div class="columns">
                                 <div class="column is-6">
-                                    <p>Truck capacity: <span x-text="tuner.capacity"></span></p>
+                                    <p>Truck capacity: <span x-text="tuner.spaceLimit"></span>m³</p>
                                     <p>No. generations: <span x-text="tuner.numberOfGenerations"></span></p>
                                 </div>
                                 <div class="column is-6">
-                                    <p>Mutation rate: <span x-text="tuner.mutationRate"></span></p>
+                                    <p>Mutation rate: <span x-text="tuner.mutationRate">%</span></p>
                                     <p>Population size: <span x-text="tuner.populationSize"></span></p>
                                 </div>
                             </div>
@@ -266,8 +266,8 @@
                                 <i class="fa-solid fa-bullseye"></i>
                                 Generation <span x-text="bestSolution.generation"></span>
                             </h4>
-                            <p>Score: <span x-text="parseFloat(bestSolution.score).toFixed(2)"></span></p>
-                            <p>Space used: <span x-text="parseFloat(bestSolution.spaceUsed).toFixed(2)"></span></p>
+                            <p>Score: <span x-text="parseFloat(bestSolution.score).toFixed(2)"></span>$</p>
+                            <p>Space used: <span x-text="parseFloat(bestSolution.spaceUsed).toFixed(2)"></span>m³</p>
                             <p></p>
 
                             <h4 class="title is-5 mt-3">Products to put in truck</h4>
@@ -296,10 +296,10 @@
                         <div class="box">
                             <h2 class="title is-4">Solutions per generation</h2>
                             <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-                                <a class="pagination-previous" :disabled="paginator.currentPage <= 1" @click="onChangePage(paginator.getPreviousPage())">Previous</a>
+                                <a class="pagination-previous" :disabled="paginator.currentPage <= 0" @click="onChangePage(paginator.getPreviousPage())">Previous</a>
                                 <a class="pagination-next" :disabled="paginator.currentPage >= paginator.lastPage" @click="onChangePage(paginator.getNextPage())">Next</a>
                                 <ul class="pagination-list">
-                                    <li x-show="paginator.hasFirstPage()"><a class="pagination-link" aria-label="Goto page 1" @click="onChangePage(1)">1</a></li>
+                                    <li x-show="paginator.hasFirstPage()"><a class="pagination-link" aria-label="Goto page 0" @click="onChangePage(0)">0</a></li>
                                     <li x-show="paginator.hasFirstPage()"><span class="pagination-ellipsis">&hellip;</span></li>
                                     <template x-for="button in paginator.getButtons()" :key="button.page">
                                         <li>
@@ -312,10 +312,13 @@
                             </nav>
                             <h4 class="title is-5">
                                 <i class="fa-solid fa-dna"></i>
-                                <span x-text="'Generation ' + pageSolution.generation + ' solution'"></span>
+                                <span x-show="pageSolution.generation > 0" x-text="'Generation ' + pageSolution.generation + ' solution'"></span>
+                                <span x-show="pageSolution.generation <= 0">Initial population's solution</span>
                             </h4>
-                            <p>Score: <span x-text="parseFloat(pageSolution.score).toFixed(2)"></span></p>
-                            <p>Space used: <span x-text="parseFloat(pageSolution.spaceUsed).toFixed(2)"></span></p>
+                            <p class="mb-2" x-show="paginator.currentPage <= 0"><em>This is the generation 0, the solution found when the population was initialized. In other words, when the chromosomes where randomly initialized and no mutations or crossovers took place</em></p>
+                        
+                            <p>Score: <span x-text="parseFloat(pageSolution.score).toFixed(2)"></span>$</p>
+                            <p>Space used: <span x-text="parseFloat(pageSolution.spaceUsed).toFixed(2)"></span>m³</p>
                             <p></p>
 
                             <h4 class="title is-5 mt-3">Products to put in truck</h4>

@@ -1,16 +1,16 @@
 class Individual {
-    chromosome: Array<number>;
+    chromosome: number[];
     score: number;
     spaceUsed: number;
     generation: number;
     capacity: number
 
-    constructor(capacity: number, chromosome: Array<number>|undefined = undefined, generation: number = 0) {
+    constructor(capacity: number, chromosome: number[]|undefined = undefined, generation: number = 0) {
         this.generation = generation;
         this.score = -1;
         this.capacity = capacity;
 
-        // Initialize chromosome
+        // Initialize chromosome randomly
         if (chromosome === undefined) {
             this.chromosome = [];
             for (let i=0; i < capacity; i++) {
@@ -21,11 +21,22 @@ class Individual {
         }
     }
 
+    /**
+     * Deeply copies the current object
+     * 
+     * @returns A clone of the current object as Individual
+     */
     clone(): Individual {
         return new Individual(this.capacity, this.chromosome, this.generation);
     }
 
-    fitness(products: Product[], capacity: number) {
+    /**
+     * Based on the fitness function used in the evolutionary algorithms, the method aims to calculate the score and the space used.
+     * 
+     * @param products
+     * @param capacity 
+     */
+    fitness(products: Product[], capacity: number): void {
         // If already calculated then ignore the below calculations
         if (this.score !== -1) {
             return;

@@ -7,7 +7,7 @@ class Paginator {
     lastPage: number;
     paginatorLength: number;
 
-    constructor(lastPage:number, currentPage: number = 1) {
+    constructor(lastPage:number, currentPage: number = 0) {
         this.currentPage = currentPage;
         this.lastPage = lastPage;
         this.paginatorLength = 3;
@@ -21,7 +21,7 @@ class Paginator {
      * @returns boolean
      */
     hasFirstPage(): boolean {
-        if (this.currentPage > 2) {
+        if (this.currentPage > 1) {
             return true;
         }
 
@@ -52,16 +52,16 @@ class Paginator {
         const buttons: PaginatorButton[] = [];
         let counter: number;
 
-        if (this.currentPage === 1) {
-            counter = 1;
+        if (this.currentPage === 0) {
+            counter = 0;
         } else if (this.currentPage === this.lastPage) {
             counter = this.lastPage - this.paginatorLength + 1;
         } else {
             counter = this.currentPage - Math.floor(this.paginatorLength / 2);
         }
 
-        if (counter < 1) {
-            counter = 1;
+        if (counter < 0) {
+            counter = 0;
         }
 
         for (let i=0; i<this.paginatorLength; i++) {
@@ -82,7 +82,7 @@ class Paginator {
      * @returns number
      */
     getPreviousPage(): number {
-        return this.currentPage === 1 ? 1 : this.currentPage - 1;
+        return this.currentPage === 0 ? 0 : this.currentPage - 1;
     }
 
     /**

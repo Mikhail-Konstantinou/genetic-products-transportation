@@ -41,12 +41,19 @@ class App implements GeneticAlgorithm {
         }
     }
 
+    /**
+     * Orders the current population based on their score, in descending order
+     */
     orderPopulation(): void {
         this.population = this.population.sort((a: Individual, b: Individual) => {
             return b.score - a.score;
         });
     }
 
+    /**
+     * Implementes the evaluation process in genetic algorithms.
+     * Essentially this process calls the fitness function of every individual and orders the population in descending order
+     */
     evaluation(): void {
         this.fitness();
         this.orderPopulation();
@@ -91,12 +98,20 @@ class App implements GeneticAlgorithm {
         return individual;
     }
 
+    /**
+     * Executes the fitness function of every individual in the current population
+     */
     fitness(): void {
         for (let individual of this.population) {
             individual.fitness(this.products, this.tuner.spaceLimit);
         }
     }
 
+    /**
+     * Calculates and returns the sum of all individuals' score
+     * 
+     * @returns 
+     */
     sumOfEvaluations(): number {
         let sum: number = 0;
         for (let individual of this.population) {
@@ -106,6 +121,12 @@ class App implements GeneticAlgorithm {
         return sum;
     }
 
+    /**
+     * Based on the sum of evaluations and a random value, the method will return a parent
+     * 
+     * @param sumOfEvaluations 
+     * @returns 
+     */
     selectParent(sumOfEvaluations: number): Individual {
         let sum: number = 0;
         let counter: number = 0;
@@ -133,6 +154,7 @@ class App implements GeneticAlgorithm {
         this.initializePopulation();
         this.evaluation();
         this.bestSolution = this.population[0];
+        this.solutions.push(this.population[0]);
 
         for (let generation = 0; generation < this.tuner.numberOfGenerations; generation++) {
             this.runGeneration();

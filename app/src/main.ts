@@ -50,14 +50,6 @@ const appGeneticTransportation = () => ({
     paginator: new Paginator(1),
 
     updateChart() {
-        const labels: number[] = [];
-        for (let i =0; i<=this.tuner.numberOfGenerations; i++) {
-            labels.push(i);
-        }
-
-        const ctxScores = document.getElementById('chartScores');
-        const ctxSpaces = document.getElementById('chartSpaces');
-
         // Destroy pre-existing graphs (required by Chart.js library)
         if (this.chartScores !== 0) {
             this.chartScores.destroy();
@@ -67,68 +59,12 @@ const appGeneticTransportation = () => ({
             this.chartSpaces.destroy();
         }
 
-        // @ts-ignore
-        this.chartScores = new Chart(ctxScores, {
-            type: 'line',
-            data: {
-            labels: labels,
-            datasets: [{
-                label: 'Score',
-                data: this.solutionScores,
-                borderWidth: 1
-            }]
-            },
-            options: {
-            scales: {
-                x: {
-                    display: true,
-                    title: {
-                        display: true,
-                        text: 'Generations'
-                    }
-                },
-                y: {
-                    beginAtZero: true
-                }
-            }
-            }
-        });
-
-        // @ts-ignore
-        this.chartSpaces = new Chart(ctxSpaces, {
-            type: 'line',
-            data: {
-            labels: labels,
-            datasets: [{
-                label: 'Space used',
-                data: this.solutionSpaces,
-                borderWidth: 1,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            }]
-            },
-            options: {
-            scales: {
-                x: {
-                    display: true,
-                    title: {
-                        display: true,
-                        text: 'Generations'
-                    }
-                },
-                y: {
-                    beginAtZero: false
-                }
-            }
-            }
-        });
+        this.chartScores = new LineChart('chartScores', this.solutionScores, 'Score', this.tuner.numberOfGenerations, true);
+        this.chartSpaces = new LineChart('chartSpaces', this.solutionSpaces, 'Space used', this.tuner.numberOfGenerations, false, true);
     },
 
     /**
-     * Evaluates the input form fields and updates the status of the products. 
-     * It checks that every product has a quantity between 0 and 5 
-     * It checks that the truck's capacity is between 1 and 5
-     * It checks that the genetic algorithm parameters are valid
+     * Evaluates the input form fields and updates the status of the products and the tuner parameters
      */
     evaluateInput() {       
         this.hasErrors = false;
@@ -148,20 +84,7 @@ const appGeneticTransportation = () => ({
         this.hasErrors = !this.tunerValidator.validate();
     },
 
-    simulate() {
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        this.evaluateInput();
-        if (this.hasErrors) {
-            return;
-        }
-
-        
-        this.runSimulation();
-        this.showForm = false;
-        this.showSimulation = true;
-    },
-
-    runSimulation() {
+    runSimulation(): void {
         this.app = new App(this.tuner, this.products);
         this.app.solve();
 
@@ -179,9 +102,25 @@ const appGeneticTransportation = () => ({
     },
 
     /**
+     * Handles the on-click event when pressing the button to start a new simulation
+     */
+    onSimulate(): void {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        this.evaluateInput();
+        if (this.hasErrors) {
+            return;
+        }
+
+        
+        this.runSimulation();
+        this.showForm = false;
+        this.showSimulation = true;
+    },
+
+    /**
      * Handles the on-click event when pressing the button to start a new demostration
      */
-    onStartOver() {
+    onStartOver(): void {
         this.showForm = true;
         this.showSimulation = false;
     },
@@ -189,7 +128,7 @@ const appGeneticTransportation = () => ({
     /**
      * Handles the on-click event when pressing the button(s) to execute a new generation
      */
-    onNewGeneration() {
+    onNewGeneration(): void {
         document.getElementById('btnNewGeneration').classList.add('is-loading');
         document.getElementById('btnNewGeneration').setAttribute('disabled', 'disabled');
 
@@ -215,7 +154,10 @@ const appGeneticTransportation = () => ({
         }, 1000);
     },
 
-    onChangePage(page: number) {
+    /**
+     * Handles the on-click event when pressing the button to change a page
+     */
+    onChangePage(page: number): void {
         this.pageSolution = this.app.solutions[page];
         this.pageSolutionProducts = this.app.getSolutionProducts(this.pageSolution);
         this.paginator = new Paginator(this.tuner.numberOfGenerations, page);

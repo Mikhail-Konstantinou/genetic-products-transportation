@@ -167,70 +167,14 @@ var appGeneticTransportation = function () { return ({
     app: {},
     paginator: new Paginator(1),
     updateChart: function () {
-        var labels = [];
-        for (var i = 0; i <= this.tuner.numberOfGenerations; i++) {
-            labels.push(i);
-        }
-        var ctxScores = document.getElementById('chartScores');
-        var ctxSpaces = document.getElementById('chartSpaces');
         if (this.chartScores !== 0) {
             this.chartScores.destroy();
         }
         if (this.chartSpaces !== 0) {
             this.chartSpaces.destroy();
         }
-        this.chartScores = new Chart(ctxScores, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                        label: 'Score',
-                        data: this.solutionScores,
-                        borderWidth: 1
-                    }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Generations'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-        this.chartSpaces = new Chart(ctxSpaces, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                        label: 'Space used',
-                        data: this.solutionSpaces,
-                        borderWidth: 1,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Generations'
-                        }
-                    },
-                    y: {
-                        beginAtZero: false
-                    }
-                }
-            }
-        });
+        this.chartScores = new LineChart('chartScores', this.solutionScores, 'Score', this.tuner.numberOfGenerations, true);
+        this.chartSpaces = new LineChart('chartSpaces', this.solutionSpaces, 'Space used', this.tuner.numberOfGenerations, false, true);
     },
     evaluateInput: function () {
         this.hasErrors = false;
@@ -247,16 +191,6 @@ var appGeneticTransportation = function () { return ({
         this.tunerValidator = new TunerValidator(this.tuner);
         this.hasErrors = !this.tunerValidator.validate();
     },
-    simulate: function () {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        this.evaluateInput();
-        if (this.hasErrors) {
-            return;
-        }
-        this.runSimulation();
-        this.showForm = false;
-        this.showSimulation = true;
-    },
     runSimulation: function () {
         this.app = new App(this.tuner, this.products);
         this.app.solve();
@@ -269,6 +203,16 @@ var appGeneticTransportation = function () { return ({
         this.pageSolution = this.app.solutions[0];
         this.pageSolutionProducts = this.app.getSolutionProducts(this.pageSolution);
         this.paginator = new Paginator(this.tuner.numberOfGenerations);
+    },
+    onSimulate: function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.evaluateInput();
+        if (this.hasErrors) {
+            return;
+        }
+        this.runSimulation();
+        this.showForm = false;
+        this.showSimulation = true;
     },
     onStartOver: function () {
         this.showForm = true;
@@ -338,6 +282,54 @@ var Individual = (function () {
         this.spaceUsed = space;
     };
     return Individual;
+}());
+var LineChart = (function () {
+    function LineChart(domItemId, dataset, label, numberOfGenerations, startFromZero, useRedColor) {
+        if (startFromZero === void 0) { startFromZero = false; }
+        if (useRedColor === void 0) { useRedColor = false; }
+        var ctx = document.getElementById(domItemId);
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: this.getLabelsOption(numberOfGenerations),
+                datasets: this.getDatasetsOption(label, dataset, useRedColor)
+            },
+            options: {
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Generations'
+                        }
+                    },
+                    y: {
+                        beginAtZero: startFromZero
+                    }
+                }
+            }
+        });
+    }
+    LineChart.prototype.getLabelsOption = function (numberOfGenerations) {
+        var labels = [];
+        for (var i = 0; i <= numberOfGenerations; i++) {
+            labels.push(i);
+        }
+    };
+    LineChart.prototype.getDatasetsOption = function (label, dataset, useRedColor) {
+        var datasetsOptions = [{
+                label: label,
+                data: dataset,
+                borderWidth: 1,
+                borderColor: '',
+                backgroundColor: ''
+            }];
+        if (useRedColor === true) {
+            datasetsOptions[0].borderColor = 'rgb(255, 99, 132)';
+            datasetsOptions[0].backgroundColor = 'rgba(255, 99, 132, 0.5)';
+        }
+    };
+    return LineChart;
 }());
 var Paginator = (function () {
     function Paginator(lastPage, currentPage) {

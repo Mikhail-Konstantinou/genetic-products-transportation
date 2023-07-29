@@ -4,7 +4,7 @@
  */
 class LineChart {
     constructor(domItemId: string, dataset: number[], label: string, numberOfGenerations: number, startFromZero: boolean = false, useRedColor: boolean = false) {
-        const ctx = document.getElementById(domItemId);
+        const ctx: HTMLElement = document.getElementById(domItemId);
 
         // @ts-ignore
         return new Chart(ctx, {

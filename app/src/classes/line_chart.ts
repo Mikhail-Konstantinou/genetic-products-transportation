@@ -4,7 +4,7 @@
  */
 class LineChart {
     constructor(domItemId: string, dataset: number[], label: string, numberOfGenerations: number, startFromZero: boolean = false, useRedColor: boolean = false) {
-        const ctx: HTMLElement = document.getElementById(domItemId);
+        const ctx = document.getElementById(domItemId);
 
         // @ts-ignore
         return new Chart(ctx, {
@@ -40,6 +40,8 @@ class LineChart {
         for (let i =0; i<=numberOfGenerations; i++) {
             labels.push(i);
         }
+
+        return labels;
     }
 
     /**
@@ -62,5 +64,7 @@ class LineChart {
             datasetsOptions[0].borderColor = 'rgb(255, 99, 132)';
             datasetsOptions[0].backgroundColor = 'rgba(255, 99, 132, 0.5)';
         }
+
+        return datasetsOptions;
     }
 }

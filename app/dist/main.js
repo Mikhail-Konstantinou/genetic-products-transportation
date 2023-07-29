@@ -177,19 +177,9 @@ var appGeneticTransportation = function () { return ({
         this.chartSpaces = new LineChart('chartSpaces', this.solutionSpaces, 'Space used', this.tuner.numberOfGenerations, false, true);
     },
     evaluateInput: function () {
-        this.hasErrors = false;
-        for (var _i = 0, _a = this.products; _i < _a.length; _i++) {
-            var product = _a[_i];
-            if (product.quantity < 0 || product.quantity > 5) {
-                this.hasErrors = true;
-                product.hasError = true;
-            }
-            else {
-                product.hasError = false;
-            }
-        }
+        var productValidator = new ProductValidator(this.products);
         this.tunerValidator = new TunerValidator(this.tuner);
-        this.hasErrors = !this.tunerValidator.validate();
+        this.hasErrors = (productValidator.validate() && this.tunerValidator.validate()) === false;
     },
     runSimulation: function () {
         this.app = new App(this.tuner, this.products);
@@ -315,6 +305,7 @@ var LineChart = (function () {
         for (var i = 0; i <= numberOfGenerations; i++) {
             labels.push(i);
         }
+        return labels;
     };
     LineChart.prototype.getDatasetsOption = function (label, dataset, useRedColor) {
         var datasetsOptions = [{
@@ -328,6 +319,7 @@ var LineChart = (function () {
             datasetsOptions[0].borderColor = 'rgb(255, 99, 132)';
             datasetsOptions[0].backgroundColor = 'rgba(255, 99, 132, 0.5)';
         }
+        return datasetsOptions;
     };
     return LineChart;
 }());
@@ -414,6 +406,26 @@ var Tuner = (function () {
         this.populationSize = populationSize;
     }
     return Tuner;
+}());
+var ProductValidator = (function () {
+    function ProductValidator(products) {
+        this.products = products;
+    }
+    ProductValidator.prototype.validate = function () {
+        var hasErrors = false;
+        for (var _i = 0, _a = this.products; _i < _a.length; _i++) {
+            var product = _a[_i];
+            if (product.quantity < 0 || product.quantity > 5) {
+                hasErrors = true;
+                product.hasError = true;
+            }
+            else {
+                product.hasError = false;
+            }
+        }
+        return hasErrors === false;
+    };
+    return ProductValidator;
 }());
 var TunerValidator = (function () {
     function TunerValidator(tuner) {

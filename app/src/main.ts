@@ -66,22 +66,10 @@ const appGeneticTransportation = () => ({
     /**
      * Evaluates the input form fields and updates the status of the products and the tuner parameters
      */
-    evaluateInput() {       
-        this.hasErrors = false;
-
-        // Evaluate products
-        for (let product of this.products) {            
-            if (product.quantity < 0 || product.quantity > 5) {
-                this.hasErrors = true;
-                product.hasError = true;
-            } else {
-                product.hasError = false;
-            }
-        }
-    
-        // Validate tuner
+    evaluateInput() {
+        const productValidator: ProductValidator = new ProductValidator(this.products);
         this.tunerValidator = new TunerValidator(this.tuner);
-        this.hasErrors = !this.tunerValidator.validate();
+        this.hasErrors = (productValidator.validate() && this.tunerValidator.validate()) === false;
     },
 
     runSimulation(): void {
@@ -105,13 +93,13 @@ const appGeneticTransportation = () => ({
      * Handles the on-click event when pressing the button to start a new simulation
      */
     onSimulate(): void {
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         this.evaluateInput();
         if (this.hasErrors) {
             return;
         }
 
-        
+
         this.runSimulation();
         this.showForm = false;
         this.showSimulation = true;

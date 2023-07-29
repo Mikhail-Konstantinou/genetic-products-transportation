@@ -1,4 +1,4 @@
-class TunerValidator {
+class TunerValidator implements Validator {
     tuner: Tuner;
     hasSpaceLimitError: boolean;
     hasNumberOfGenerationsError: boolean;
@@ -14,7 +14,7 @@ class TunerValidator {
      * 
      * @returns boolean
      */
-    validateSpaceLimit(): boolean {
+    private validateSpaceLimit(): boolean {
         this.hasSpaceLimitError = this.tuner.spaceLimit < 1 || this.tuner.spaceLimit > 10;
         
         return this.hasSpaceLimitError === false;
@@ -25,7 +25,7 @@ class TunerValidator {
      * 
      * @returns boolean
      */
-    validateNumberOfGenerations(): boolean {
+    private validateNumberOfGenerations(): boolean {
         this.hasNumberOfGenerationsError = this.tuner.numberOfGenerations < 1 || this.tuner.numberOfGenerations > 500;
         
         return this.hasNumberOfGenerationsError === false;
@@ -36,7 +36,7 @@ class TunerValidator {
      * 
      * @returns boolean
      */
-    validateMutationRate(): boolean {
+    private validateMutationRate(): boolean {
         this.hasMutationRateError = this.tuner.mutationRate <=0 || this.tuner.mutationRate > 1;
         
         return this.hasMutationRateError === false;
@@ -47,7 +47,7 @@ class TunerValidator {
      * 
      * @returns boolean
      */
-    validatePopulationSize(): boolean {
+    private validatePopulationSize(): boolean {
         this.hasPopulationSizeError = this.tuner.populationSize < 1 || this.tuner.populationSize > 50;
         
         return this.hasPopulationSizeError === false;

@@ -132,6 +132,7 @@ var App = (function () {
     };
     return App;
 }());
+var _this = this;
 var appGeneticTransportation = function () { return ({
     products: [
         new Product('Refrigerator A', 0.751, 999.90),
@@ -151,6 +152,7 @@ var appGeneticTransportation = function () { return ({
     ],
     tuner: new Tuner(3, 100, 0.05, 20),
     hasErrors: false,
+    tunerValidator: new TunerValidator(_this.tuner),
     showForm: true,
     showSimulation: false,
     solutions: {},
@@ -171,7 +173,6 @@ var appGeneticTransportation = function () { return ({
         }
         var ctxScores = document.getElementById('chartScores');
         var ctxSpaces = document.getElementById('chartSpaces');
-        var ctxTuning = document.getElementById('chartTuning');
         if (this.chartScores !== 0) {
             this.chartScores.destroy();
         }
@@ -243,6 +244,8 @@ var appGeneticTransportation = function () { return ({
                 product.hasError = false;
             }
         }
+        this.tunerValidator = new TunerValidator(this.tuner);
+        this.hasErrors = !this.tunerValidator.validate();
     },
     simulate: function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -250,9 +253,9 @@ var appGeneticTransportation = function () { return ({
         if (this.hasErrors) {
             return;
         }
+        this.runSimulation();
         this.showForm = false;
         this.showSimulation = true;
-        this.runSimulation();
     },
     runSimulation: function () {
         this.app = new App(this.tuner, this.products);
@@ -419,5 +422,34 @@ var Tuner = (function () {
         this.populationSize = populationSize;
     }
     return Tuner;
+}());
+var TunerValidator = (function () {
+    function TunerValidator(tuner) {
+        this.tuner = tuner;
+    }
+    TunerValidator.prototype.validateSpaceLimit = function () {
+        this.hasSpaceLimitError = this.tuner.spaceLimit < 1 || this.tuner.spaceLimit > 10;
+        return this.hasSpaceLimitError === false;
+    };
+    TunerValidator.prototype.validateNumberOfGenerations = function () {
+        this.hasNumberOfGenerationsError = this.tuner.numberOfGenerations < 1 || this.tuner.numberOfGenerations > 500;
+        return this.hasNumberOfGenerationsError === false;
+    };
+    TunerValidator.prototype.validateMutationRate = function () {
+        this.hasMutationRateError = this.tuner.mutationRate <= 0 || this.tuner.mutationRate > 1;
+        return this.hasMutationRateError === false;
+    };
+    TunerValidator.prototype.validatePopulationSize = function () {
+        this.hasPopulationSizeError = this.tuner.populationSize < 1 || this.tuner.populationSize > 50;
+        return this.hasPopulationSizeError === false;
+    };
+    TunerValidator.prototype.validate = function () {
+        this.validateSpaceLimit();
+        this.validateNumberOfGenerations();
+        this.validateMutationRate();
+        this.validatePopulationSize();
+        return (this.hasSpaceLimitError || this.hasMutationRateError || this.hasNumberOfGenerationsError || this.hasPopulationSizeError) === false;
+    };
+    return TunerValidator;
 }());
 //# sourceMappingURL=main.js.map

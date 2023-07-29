@@ -18,6 +18,10 @@ const appGeneticTransportation = () => ({
     tuner: new Tuner(3, 100, 0.05, 20),
     hasErrors: false,
 
+    // Validators
+    // @ts-ignore
+    tunerValidator: new TunerValidator(this.tuner),
+
     // The following flags control the sections that are being shown in the demostration tab
     showForm: true,
     showSimulation: false,
@@ -53,7 +57,6 @@ const appGeneticTransportation = () => ({
 
         const ctxScores = document.getElementById('chartScores');
         const ctxSpaces = document.getElementById('chartSpaces');
-        const ctxTuning = document.getElementById('chartTuning');
 
         // Destroy pre-existing graphs (required by Chart.js library)
         if (this.chartScores !== 0) {
@@ -139,6 +142,10 @@ const appGeneticTransportation = () => ({
                 product.hasError = false;
             }
         }
+    
+        // Validate tuner
+        this.tunerValidator = new TunerValidator(this.tuner);
+        this.hasErrors = !this.tunerValidator.validate();
     },
 
     simulate() {
@@ -148,9 +155,10 @@ const appGeneticTransportation = () => ({
             return;
         }
 
+        
+        this.runSimulation();
         this.showForm = false;
         this.showSimulation = true;
-        this.runSimulation();
     },
 
     runSimulation() {

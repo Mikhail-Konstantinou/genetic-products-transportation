@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="assets/vendor/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+
   </head>
   <body x-data="pageManager">
 
@@ -49,7 +49,7 @@
             </div>
           </nav>
         </div> -->
-      
+
         <div class="hero-body">
           <div class="container has-text-centered">
             <p class="title">
@@ -60,16 +60,16 @@
             </p>
           </div>
         </div>
-      
+
         <div class="hero-foot">
           <nav class="tabs is-boxed is-fullwidth">
             <div class="container">
               <ul>
                 <li :class="selectedTab === 0 ? 'is-active' : ''">
-                  <a x-on:click="changeTab(0)">Project overview</a>
+                    <a x-on:click="changeTab(0)">Project overview</a>
                 </li>
                 <li :class="selectedTab === 1 ? 'is-active' : ''">
-                  <a x-on:click="changeTab(1)">Demostration</a>
+                    <a x-on:click="changeTab(1)">Demostration</a>
                 </li>
                 <li :class="selectedTab === 2 ? 'is-active' : ''">
                     <a x-on:click="changeTab(2)">Solution explained</a>
@@ -90,7 +90,7 @@
 
             <h3>Possible solutions</h3>
             <p>The number of possible solutions for this problem are... over a million! For only 10 products, there are about 39.916.800 possible combinations!
-                It is quite exhaustive to iterate all possible combinations and choose the best combination. What if we want to add more products in the future? 
+                It is quite exhaustive to iterate all possible combinations and choose the best combination. What if we want to add more products in the future?
             </p>
             <p>Well, luckily, genetic algorithms are a perfect fit for this kind of problems!
             </p>
@@ -104,8 +104,8 @@
 
             <h2>How genetic algorithms work?</h2>
             <p>Genetic algorithms are a field of Evolutionary algorithms...which are in turn a field of Artificial Intelligence</p>
-            <p>Conceptually, evolutionary algorithms are inspired by nature. If we imagine that a problem can be represented as "genes" and "chromosomes", we could then breed and 
-                mutate the chromosomes until we find the best solution. This is often called as "survival of the fittest". 
+            <p>Conceptually, evolutionary algorithms are inspired by nature. If we imagine that a problem can be represented as "genes" and "chromosomes", we could then breed and
+                mutate the chromosomes until we find the best solution. This is often called as "survival of the fittest".
             </p>
             <p>For instance, in this example we declare a chromosome as a combination of goods that are loaded into the track. 0100 is a chromosome that indicates that </p>
         </div>
@@ -115,13 +115,11 @@
                 <div class="columns">
                     <div class="column is-7 is-offset-2">
                         <div class="box">
-                          <div class="notification is-danger is-light mt-3" x-show="hasErrors">
-                            <strong>Error!</strong>
-                            Some of the inputs specified are incorrect!
-                            Please make sure that the track has a capacity between 1 and 10 cubic meters and that the products are values between 1 and 5
-                          </div>
+                            <div class="notification is-danger is-light mt-3" x-show="hasErrors">
+                                <strong>Error!</strong> Some of the inputs specified are incorrect!
+                            </div>
 
-                          
+
                             <h2 class="title is-6">
                                 <span class="icon">
                                     <i class="fa-solid fa-truck"></i>
@@ -130,12 +128,22 @@
                             </h2>
                             <div class="field is-horizontal">
                                 <div class="field-label is-normal">
-                                <label class="label">Capacity (cubic meters)</label>
+                                <label :class="'label ' + (tunerValidator.hasSpaceLimitError ? 'has-text-danger' : '')">
+                                    Capacity (cubic meters)
+                                </label>
                                 </div>
                                 <div class="field-body">
                                 <div class="field">
                                     <p class="control">
-                                    <input class="input" type="number" min="1" x-model="tuner.spaceLimit">
+                                        <input 
+                                        :class="'input ' + (tunerValidator.hasSpaceLimitError ? 'is-danger' : '')"
+                                        type="number" 
+                                        min="1" 
+                                        max="10" 
+                                        x-model="tuner.spaceLimit">
+                                    </p>    
+                                    <p x-show="tunerValidator.hasSpaceLimitError" class="is-size-7 has-text-danger">
+                                        Capacity must be between 1 and 10
                                     </p>
                                 </div>
                                 </div>
@@ -154,19 +162,20 @@
                                 <div class="field-body">
                                 <div class="field">
                                     <p class="control">
-                                    <input 
-                                    :class="'input ' + (product.hasError ? 'is-danger' : '')" 
-                                    type="number" 
-                                    min="0" 
-                                    max="5" 
-                                    :name="product.quantity" 
+                                    <input
+                                    :class="'input ' + (product.hasError ? 'is-danger' : '')"
+                                    type="number"
+                                    min="0"
+                                    max="5"
+                                    :name="product.quantity"
                                     x-model="product.quantity">
                                     </p>
+                                    <p x-show="product.hasError" class="is-size-7 has-text-danger">Quantity must be between 1 and 5</p>
                                 </div>
                                 </div>
                               </div>
                             </template>
-                            
+
                             <!-- Genetic algorithms parameters -->
                             <h2 class="title is-6 mt-6">
                               <span class="icon">
@@ -176,25 +185,46 @@
                           </h2>
                           <div class="field is-horizontal">
                               <div class="field-label is-normal">
-                              <label class="label"># Generations</label>
+                                <label :class="'label ' + (tunerValidator.hasNumberOfGenerationsError ? 'has-text-danger' : '')">
+                                    # Generations
+                                </label>
                               </div>
                               <div class="field-body">
-                              <div class="field">
-                                  <p class="control">
-                                  <input class="input" type="number" min="10" x-model="tuner.numberOfGenerations">
-                                  </p>
-                              </div>
+                                <div class="field">
+                                    <p class="control">
+                                        <input
+                                        :class="'input ' + (tunerValidator.hasNumberOfGenerationsError ? 'is-danger' : '')"
+                                        type="number"
+                                        min="1"
+                                        max="1000"
+                                        x-model="tuner.numberOfGenerations">
+                                    </p>
+                                    <p x-show="tunerValidator.hasNumberOfGenerationsError" class="is-size-7 has-text-danger">
+                                    Number of generations must be between 1 and 500
+                                    </p>
+                                </div>
                               </div>
                           </div>
 
                           <div class="field is-horizontal">
                             <div class="field-label is-normal">
-                            <label class="label">% Mutation probability</label>
+                            <label :class="'label ' + (tunerValidator.hasMutationRateError ? 'has-text-danger' : '')">
+                                % Mutation probability
+                            </label>
                             </div>
                             <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                <input class="input" type="number" step="0.01" min="0" max="100" x-model="tuner.mutationRate">
+                                    <input
+                                    :class="'input ' + (tunerValidator.hasMutationRateError ? 'is-danger' : '')"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    max="100"
+                                    x-model="tuner.mutationRate">
+                                </p>
+                                <p x-show="tunerValidator.hasMutationRateError" class="is-size-7 has-text-danger">
+                                    Mutation must be between 0 and 1
                                 </p>
                             </div>
                             </div>
@@ -202,21 +232,31 @@
 
                           <div class="field is-horizontal">
                             <div class="field-label is-normal">
-                            <label class="label"># Population size</label>
+                            <label :class="'label ' + (tunerValidator.hasPopulationSizeError ? 'has-text-danger' : '')">
+                                # Population size
+                            </label>
                             </div>
                             <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                <input class="input" type="number" step="1" min="10" max="10000" x-model="tuner.populationSize">
+                                    <input
+                                    :class="'input ' + (tunerValidator.hasPopulationSizeError ? 'is-danger' : '')"
+                                    type="number"
+                                    step="1"
+                                    min="1"
+                                    max="1000"
+                                    x-model="tuner.populationSize">
+                                </p>
+                                <p x-show="tunerValidator.hasPopulationSizeError" class="is-size-7 has-text-danger">
+                                    Population size must be between 1 and 50
                                 </p>
                             </div>
                             </div>
                           </div>
 
                           <button class="button is-info is-fullwidth" x-on:click="simulate()">Start</button>
-                          <span x-show="hasErrors == true" class="has-text-danger">Some fields are incorrect</span>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -252,8 +292,8 @@
                         </div>
                     </div>
                 </div>
-            
-                
+
+
                 <div class="columns">
                     <div class="column is-6">
                         <div class="box">
@@ -283,10 +323,10 @@
                                                 <td x-text="product['space']"></td>
                                             </tr>
                                         </template>
-                                    </tbody>    
+                                    </tbody>
                                 </table>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="column is-6">
@@ -313,7 +353,7 @@
                                 <span x-show="pageSolution.generation <= 0">Initial population's solution</span>
                             </h4>
                             <p class="mb-2" x-show="paginator.currentPage <= 0"><em>This is the generation 0, the solution found when the population was initialized. In other words, when the chromosomes where randomly initialized and no mutations or crossovers took place</em></p>
-                        
+
                             <p>Score: <span x-text="parseFloat(pageSolution.score).toFixed(2)"></span>$</p>
                             <p>Space used: <span x-text="parseFloat(pageSolution.spaceUsed).toFixed(2)"></span>m³</p>
                             <p></p>
@@ -334,12 +374,12 @@
                                                 <td x-text="product['space']"></td>
                                             </tr>
                                         </template>
-                                    </tbody>    
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
               <div class="columns">
                 <div class="column">
@@ -352,17 +392,17 @@
                 </div>
               </div>
             </div>
-            
+
         </div>
 
         <div id="section-solution-explained" x-show="selectedTab == 2" x-transition.duration.500ms>
             <div class="content">
                 <h2>Solution explained</h2>
-                The explanation below assumes that you are familiar with at least the concept of genetic algorithms. 
+                The explanation below assumes that you are familiar with at least the concept of genetic algorithms.
                 If not, perhaps this article is <a target="_blank" href="https://www.geeksforgeeks.org/genetic-algorithms/">illuminative</a>. Nevertheless, the explanation below is meant for everyone, not just experts.
                 <p>One of the challenges of genetic algorithms, is to break the problem down to chromosomes, genes and a fitness function.
-                  Once you determine that, the rest is quite straightforward (simply put at least). Below, there is a brief explanation on how 
-                  I defined the gene, the chromosome and the fitness function to solve this problem. 
+                  Once you determine that, the rest is quite straightforward (simply put at least). Below, there is a brief explanation on how
+                  I defined the gene, the chromosome and the fitness function to solve this problem.
                 </p>
 
                 <h3>Gene</h3>
@@ -373,9 +413,9 @@
                 </ul>
 
                 <h3>Chromosome</h3>
-                <p>A chromosome is sequence of genes. Essentially a chromosome represents a solution. 
+                <p>A chromosome is sequence of genes. Essentially a chromosome represents a solution.
                     For instance, the chromosome 010 below means that the first and thrid products are not selected and the second product is selected to be put inside the truck.
-                    In other words, the solution below shows that the TV and the mobile phone will not be put in the truck whereas the Notebook will be. 
+                    In other words, the solution below shows that the TV and the mobile phone will not be put in the truck whereas the Notebook will be.
                 </p>
                 <p>
                     <img src="assets/img/representation.png" alt="Representation">
@@ -387,10 +427,10 @@
                 the product is included in the truck... does this mean that the all product instances shall be included?</p>
                 <p><strong>No</strong>. Once the products are specified, the solver creates a list (sequence) of the products. If a product has 2 instances,
                 then the product is represented in the list <strong>twice!</strong>. Similarly, for every instance of the same product, a new representation will be added.
-                If a product has 0 instances, then obviously the product will not be added to the sequence.   
+                If a product has 0 instances, then obviously the product will not be added to the sequence.
               </p>
               <p>The example below shows how the product "TV" will be represented if the product has quantity equal to two. As you will notice, the product has been added
-                to the chromosome twice. 
+                to the chromosome twice.
               </p>
                 <p>
                     <img src="assets/img/representation_multiple.png" alt="Representation">
@@ -406,7 +446,7 @@
             </p>
         </div>
     </footer>
-    
+
     <!-- Scripts -->
     <script defer src="assets/vendor/js/alpinejs.min.js"></script>
     <script src="assets/vendor/js/chart.js"></script>

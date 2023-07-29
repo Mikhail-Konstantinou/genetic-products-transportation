@@ -9,8 +9,8 @@ pageManager = () => ({
             if (this.selectedTab < 0) {
                 this.selectedTab = 0;
             }
-            if (this.selectedTab > 3) {
-                this.selectedTab = 3
+            if (this.selectedTab > 2) {
+                this.selectedTab = 2
             }
         }
 });

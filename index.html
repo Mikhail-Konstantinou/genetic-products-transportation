@@ -72,11 +72,8 @@
                   <a x-on:click="changeTab(1)">Demostration</a>
                 </li>
                 <li :class="selectedTab === 2 ? 'is-active' : ''">
-                  <a x-on:click="changeTab(2)">Solution explained</a>
+                    <a x-on:click="changeTab(2)">Solution explained</a>
                 </li>
-                <li :class="selectedTab === 3 ? 'is-active' : ''">
-                    <a x-on:click="changeTab(3)">Project implementation</a>
-                  </li>
               </ul>
             </div>
           </nav>
@@ -248,7 +245,7 @@
                                     <p>No. generations: <span x-text="tuner.numberOfGenerations"></span></p>
                                 </div>
                                 <div class="column is-6">
-                                    <p>Mutation rate: <span x-text="tuner.mutationRate">%</span></p>
+                                    <p>Mutation rate: <span x-text="tuner.mutationRate"></span>%</p>
                                     <p>Population size: <span x-text="tuner.populationSize"></span></p>
                                 </div>
                             </div>
@@ -354,24 +351,6 @@
                     <canvas id="chartSpaces"></canvas>
                 </div>
               </div>
-
-                <!-- <table class="table is-bordered is-striped is-narrow is-hoverable ">
-                <thead>
-                    <th>Generation</th>
-                    <th>Score ($)</th>
-                    <th>Space used (m³)</th>
-                </thead>
-                <tbody>
-                    <template x-for="solution of solutions">
-                    <tr>
-                        <td x-text="solution.generation"></td>
-                        <td x-text="parseFloat(solution.score).toFixed(2);"></td>
-                        <td x-text="parseFloat(solution.spaceUsed).toFixed(2);"></td>
-                    </tr>
-                    </template>
-                </tbody>
-                </table> -->
-                
             </div>
             
         </div>

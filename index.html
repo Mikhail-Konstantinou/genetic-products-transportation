@@ -73,7 +73,7 @@
                   <a x-on:click="changeTab(1)">Demostration</a>
                 </li>
                 <li :class="selectedTab === 2 ? 'is-active' : ''">
-                  <a x-on:click="changeTab(2)">Evolutionary algorithms explained</a>
+                  <a x-on:click="changeTab(2)">Solution explained</a>
                 </li>
                 <li :class="selectedTab === 3 ? 'is-active' : ''">
                     <a x-on:click="changeTab(3)">Project implementation</a>
@@ -377,6 +377,13 @@
         <div id="section-solution-explained" x-show="selectedTab == 2" x-transition.duration.500ms>
             <div class="content">
                 <h2>Solution explained</h2>
+                The explanation below assumes that you are familiar with at least the concept of genetic algorithms. 
+                If not, perhaps this article is <a target="_blank" href="https://www.geeksforgeeks.org/genetic-algorithms/">illuminative</a>. Nevertheless, the explanation below is meant for everyone, not just experts.
+                <p>One of the challenges of genetic algorithms, is to break the problem down to chromosomes, genes and a fitness function.
+                  Once you determine that, the rest is quite straightforward (simply put at least). Below, there is a brief explanation on how 
+                  I defined the gene, the chromosome and the fitness function to solve this problem. 
+                </p>
+
                 <h3>Gene</h3>
                 <p>A gene in this problem is represented as a binary digit.</p>
                 <ul>
@@ -386,19 +393,24 @@
 
                 <h3>Chromosome</h3>
                 <p>A chromosome is sequence of genes. Essentially a chromosome represents a solution. 
-                    For instance, the chromosome 0100 means that the first product is not selected, the second product is selected
-                    while the last two products are not selected. 
+                    For instance, the chromosome 010 below means that the first and thrid products are not selected and the second product is selected to be put inside the truck.
+                    In other words, the solution below shows that the TV and the mobile phone will not be put in the truck whereas the Notebook will be. 
                 </p>
                 <p>
                     <img src="assets/img/representation.png" alt="Representation">
                 </p>
 
-                <h3>Representing the problem as chromsomes and genes</h3>
+                <h3>Handling quantities</h3>
                 <p>If you already tried the form in the <strong>demonstration</strong> tab, you might have noticed
                 that in the form you are able to choose more than one instances of the same product (e.g. 3 TVs). Since a chromosome is a binary value representing whether
                 the product is included in the truck... does this mean that the all product instances shall be included?</p>
-                <p><strong>No</strong>. Once the products are specified, the solver creates a list (sequence) of the products. If a product has more than 1 instances,
-                then the product is represented in the list <strong>twice!</strong></p>
+                <p><strong>No</strong>. Once the products are specified, the solver creates a list (sequence) of the products. If a product has 2 instances,
+                then the product is represented in the list <strong>twice!</strong>. Similarly, for every instance of the same product, a new representation will be added.
+                If a product has 0 instances, then obviously the product will not be added to the sequence.   
+              </p>
+              <p>The example below shows how the product "TV" will be represented if the product has quantity equal to two. As you will notice, the product has been added
+                to the chromosome twice. 
+              </p>
                 <p>
                     <img src="assets/img/representation_multiple.png" alt="Representation">
                 </p>
@@ -420,7 +432,6 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('pageManager', pageManager);
-
             Alpine.data('appGeneticTransportation', appGeneticTransportation);
         });
     </script>

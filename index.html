@@ -46,31 +46,41 @@
     <div class="container mt-5">
         <div id="section-project-overview" class="content" x-show="selectedTab === 0" x-transition.duration.500ms>
             <h2>Project description</h2>
-            <p>Let's assume that a company must immediately load up a truck with as much items as possible. Under what criteria should the company load the truck
-                and what combination of products will give to the company the best outcome? Of 100 products... how can we find out which products shall we put into the track
-                to <b>maximize the profit</b>?
+            <p>Let's assume that a company has a truck that can ship goods. Each product that is loaded into the truck has a different potential profit whereas other products take up more space than others.
+                The question is: <strong>how can we ensure that the truck is loaded with products that maximize the profit?</strong>
+                In other words, which products shall the company load in the truck to get the maximum profit?
             </p>
 
             <h3>Possible solutions</h3>
             <p>The number of possible solutions for this problem are... over a million! For only 10 products, there are about 39.916.800 possible combinations!
-                It is quite exhaustive to iterate all possible combinations and choose the best combination. What if we want to add more products in the future?
+                It is quite exhaustive to iterate all possible combinations and choose the best combination. What if we want to add more products in the future? Every complication will only increase
+                the number of possible solutions.
             </p>
-            <p>Well, luckily, genetic algorithms are a perfect fit for this kind of problems!
+            <p>In this project, we used genetic algorithms which seems to be a perfect fit for this kind of problems!
             </p>
 
             <h2>How it works</h2>
             <ol>
                 <li>You choose the tab "Demostration" above</li>
-                <li>You define the problem. Specify which products exist in your problem and the capacity of the track (e.g. 2 TVs of 0.400 cubic meters and a track of 3 cubic meters)</li>
+                <li>You define the problem. Specify which products exist in your problem and the capacity of the truck (e.g. 2 TVs of 0.400 cubic meters and a track of 3 cubic meters)</li>
                 <li>You click "run" and the "Genetic transportation of goods" will give you an optimal solution</li>
             </ol>
 
-            <h2>How genetic algorithms work?</h2>
-            <p>Genetic algorithms are a field of Evolutionary algorithms...which are in turn a field of Artificial Intelligence</p>
-            <p>Conceptually, evolutionary algorithms are inspired by nature. If we imagine that a problem can be represented as "genes" and "chromosomes", we could then breed and
-                mutate the chromosomes until we find the best solution. This is often called as "survival of the fittest".
+            <h2>Example</h2>
+            <p>Let's assume that company A has a truck of capacity equal to 1m³. In their storage they have the following products available for shipping:
+                <ul>
+                    <li>Super 4K TV with margin=500$ and package space=0.2m³ X 5</li>
+                    <li>Suma shoes with margin=20$ and package space=0.05m³ X 10</li>
+                    <li>Notebook with margin=1000$ and package space=0.005m³ X 1</li>
+                </ul>
             </p>
-            <p>For instance, in this example we declare a chromosome as a combination of goods that are loaded into the track. 0100 is a chromosome that indicates that </p>
+            <p>What would you choose in this situation? Obviously you wouldn't add the 5 TVs in the truck just to fill up the truck, right?
+                You would most probably put the notebook first which doesn't take much space and yields the highest income. Then you would have space 
+                for 4 more TVs. You can add those too. 
+            </p>
+            <p>Afterwards, you are left with 0.15m³. So what do you do? You obviously add three pairs of shoes that will fill your truck and generate a few more bucks.</p>
+            <p>As simple as it sounds, it can be quite challenging to do this procedure when you have a warehouse of thousands of products. This is why the automation of such a procedure is needed. 
+                In this project, we used genetic algorithms to solve this issue. Click on the demostration tab to try such an example.</p>
         </div>
 
         <div id="section-demostration" x-show="selectedTab == 1" x-transition.duration.500ms x-data="appGeneticTransportation">

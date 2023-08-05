@@ -30,4 +30,4 @@ npm install
 
 ## Special thanks
 
-This project is inspired by the course [The Ultimate Beginners Guide to Genetic Algorithms in Python](https://www.udemy.com/course/the-ultimate-beginners-guide-to-genetic-algorithms-in-python/). The problem of loading products in a truck with a genetic algorithms solutions is inspired by this course, although the implementation is totally different and the problem is modified to support multiple quantities of a product. 
+This project is inspired by the course [The Ultimate Beginners Guide to Genetic Algorithms in Python](https://www.udemy.com/course/the-ultimate-beginners-guide-to-genetic-algorithms-in-python/). The problem of loading products in a truck with a genetic algorithms solutions is inspired by this course, although the implementation is totally different and the problem is modified to support multiple quantities of a product. The products used are from the above mentioned course.

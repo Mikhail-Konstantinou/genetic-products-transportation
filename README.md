@@ -2,7 +2,7 @@
 
 This is personal project to solve the problem of loading multiple products in a truck using genetic algorithms. 
 
-Demo: https://mikhail-konstantinou.github.io/genetic-products-transportation/
+Demo: https://michaelkonstantinou.github.io/genetic-products-transportation/
 
 ## Problem description
 
